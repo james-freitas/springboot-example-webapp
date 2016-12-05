@@ -21,7 +21,7 @@ public class GreetingBatchBean {
     private GreetingService greetingService;
 
     @Scheduled(
-            cron = "0,30 * * * * *" )
+            cron = "${batch.greeting.cron}" )
     public void cronJob(){
 
         logger.info("> cronjob");
@@ -33,9 +33,9 @@ public class GreetingBatchBean {
         logger.info("< cronjob");
     }
 
-/*    @Scheduled(
-            initialDelay = 5000,
-            fixedRate = 15000
+    @Scheduled(
+            initialDelayString = "${batch.greeting.initialdelay}",
+            fixedRateString = "${batch.greeting.fixedrate}"
     )
 
     public void fixedRateJobWithInitialDelay(){
@@ -54,11 +54,11 @@ public class GreetingBatchBean {
         logger.info("Processing time was {} seconds.", pause / 1000);
         logger.info("< fixedRateJobWithInitialDelay");
     }
-*/
+
 
     @Scheduled(
-            initialDelay = 5000,
-            fixedDelay = 15000
+            initialDelayString = "${batch.greeting.initialdelay}",
+            fixedDelayString = "${batch.greeting.fixeddelay}"
     )
     public void fixedDelayJobWithInitialDelay(){
         logger.info("> fixedDelayJobWithInitialDelay");

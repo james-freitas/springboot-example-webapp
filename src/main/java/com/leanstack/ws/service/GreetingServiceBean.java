@@ -85,6 +85,7 @@ public class GreetingServiceBean implements GreetingService{
         greetingRepository.delete(id);
     }
 
+    @Override
     @CacheEvict(
             value = "greetings",
             allEntries = true )
