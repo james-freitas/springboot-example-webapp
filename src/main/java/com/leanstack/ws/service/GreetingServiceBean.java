@@ -3,6 +3,7 @@ package com.leanstack.ws.service;
 import com.leanstack.ws.model.Greeting;
 import com.leanstack.ws.repository.GreetingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,10 +20,14 @@ import java.util.Collection;
 public class GreetingServiceBean implements GreetingService{
 
     @Autowired
-    GreetingRepository greetingRepository;
+    private GreetingRepository greetingRepository;
+
+    @Autowired
+    private CounterService counterService;
 
     @Override
     public Collection<Greeting> findAll() {
+        counterService.increment("method.invoked.greetingServiceBean.findAll");
         Collection<Greeting> greetings = greetingRepository.findAll();
         return greetings;
     }
@@ -32,6 +37,7 @@ public class GreetingServiceBean implements GreetingService{
             value = "greetings",
             key = "#id")
     public Greeting findOne(Long id) {
+        counterService.increment("method.invoked.greetingServiceBean.findOne");
         Greeting greeting = greetingRepository.findOne(id);
         return greeting;
     }
@@ -46,6 +52,7 @@ public class GreetingServiceBean implements GreetingService{
             key = "#result.id"
     )
     public Greeting create(Greeting greeting) {
+        counterService.increment("method.invoked.greetingServiceBean.create");
         if(greeting.getId() != null) {
             // Cannot create Greeting with specified ID value
             return null;
@@ -64,6 +71,7 @@ public class GreetingServiceBean implements GreetingService{
             value = "greetings",
             key = "#greeting.id")
     public Greeting update(Greeting greeting) {
+        counterService.increment("method.invoked.greetingServiceBean.update");
         Greeting greetingPersisted = findOne(greeting.getId());
         if(greetingPersisted == null) {
             // Cannot update Greeting that hasnt been persisted
@@ -82,6 +90,7 @@ public class GreetingServiceBean implements GreetingService{
             value = "greetings",
             key = "#id")
     public void delete(Long id) {
+        counterService.increment("method.invoked.greetingServiceBean.delete");
         greetingRepository.delete(id);
     }
 
